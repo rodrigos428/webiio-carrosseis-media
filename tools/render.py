@@ -10,7 +10,7 @@ H,B,O=[os.path.abspath(a) for a in sys.argv[1:4]]
 T=os.path.dirname(os.path.abspath(__file__))
 F=os.path.join(T,'node_modules/@fontsource/outfit/files/')
 if not os.path.isdir(F): subprocess.run(['npm','i','--prefix',T,'@fontsource/outfit'],check=True,capture_output=True)
-FONTCSS=''.join(f"@font-face{{font-family:'Outfit';font-weight:{w};src:url(https://fonts.local/{w}.woff2) format('woff2')}}" for w in (300,400,500,700))
+FONTCSS=''.join(f"@font-face{{font-family:'Outfit';font-weight:{w};src:url(https://fonts.local/{w}.woff2) format('woff2')}}" for w in (300,400,500,600,700))
 def ctype(p):
     h=open(p,'rb').read(64).lstrip()
     if h.startswith(b'\x89PNG'): return 'image/png'
@@ -26,7 +26,7 @@ async def route(r):
         print('EM FALTA',i); return await r.abort()
     if 'fonts.googleapis.com' in u: return await r.fulfill(body=FONTCSS,content_type='text/css')
     if 'fonts.local' in u:
-        w=u.rsplit('/',1)[1].split('.')[0]; w='500' if w=='700' else w
+        w=u.rsplit('/',1)[1].split('.')[0]; w='600' if w=='700' else w
         return await r.fulfill(path=F+f'outfit-latin-{w}-normal.woff2',content_type='font/woff2')
     if u.startswith('https://page.local/') and u.endswith('.html'):
         return await r.fulfill(path=os.path.join(H,u.rsplit('/',1)[1]),content_type='text/html')
